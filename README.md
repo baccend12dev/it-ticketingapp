@@ -1,59 +1,113 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# OTTO IT - IT Support Ticketing Portal
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+OTTO IT is a modern, responsive, and secure IT Support Ticketing Application designed to streamline issue reporting and ticketing operations for organizations.
 
-## About Laravel
+## Tech Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Framework**: Laravel 12
+- **Language**: PHP 8.2
+- **Database**: PostgreSQL (pgsql)
+- **Frontend**: Bootstrap 5, Bootstrap Icons, Vanilla CSS Design System, Vite (Asset Bundler)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Key Features
 
-## Learning Laravel
+1. **Role-Based Operational Dashboard**:
+   - Dynamic ticketing stats cards (Total, Active, Pending, Resolved) with micro-animations on hover.
+   - Clickable statistics cards that redirect and auto-apply filters on the Ticket Directory.
+   - Interactive Support Queue table showing the 5 most recent tickets with detail modals accessible directly from the dashboard.
+   - Security-enforced role data isolation: regular users (`user`) only see their own tickets, while `admin` and `it` staff see system-wide statistics.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+2. **Ticket Management**:
+   - **Ticket Directory**: Searchable list with quick client-side filtering by status (All, Active, Pending, Resolved, Canceled).
+   - **Detailed Modals**: Pop-up window containing detailed fields (priority, status, categories, sub-categories, department, location, reporter, descriptions, and file attachments).
+   - **Public Submission**: Form allowing unauthenticated users to submit issues. The system auto-links the ticket to their email (or registers a new user account if they don't exist).
+   - **File Attachments**: Upload and download options for attachments (supporting automatic inline image previews).
+   - **Status Actions**: Direct status updates (Active, Pending, Resolved, Canceled) available to authorized staff via the directory dropdown.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+3. **User & Identity Directory**:
+   - Admin and IT staff can view, search, and register users.
+   - Admins can delete users or toggle active/inactive status (protecting self-account modification).
 
-## Laravel Sponsors
+4. **Master Data Administration (Admin Only)**:
+   - Complete CRUD interfaces for managing **Departments**, **Locations**, **Categories**, and **Sub-Categories**.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## Installation & Setup
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Follow these steps to set up the project locally:
 
-## Contributing
+### 1. Prerequisites
+Ensure you have PHP 8.2, Composer, Node.js (with NPM), and a PostgreSQL database server installed.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 2. Clone and Configure
+Clone the project repository to your working directory. Then create your `.env` configuration file:
+```bash
+cp .env.example .env
+```
 
-## Code of Conduct
+Open `.env` and specify your PostgreSQL database credentials:
+```env
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1      # Update with your PostgreSQL Host
+DB_PORT=5432           # Default is 5432 (or 5434 in custom environments)
+DB_DATABASE=it-ticket
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 3. Install Dependencies
+Install PHP dependencies via Composer and frontend packages via NPM:
+```bash
+composer install
+npm install
+```
 
-## Security Vulnerabilities
+### 4. Database Setup
+Generate your application key, run database migrations, and seed initial master data and test accounts:
+```bash
+php artisan key:generate
+php artisan migrate --seed
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 5. Start the Application
+Compile the assets and run the local development server:
+```bash
+# Compile assets with Vite
+npm run dev
 
-## License
+# Start Laravel development server
+php artisan serve
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Access the application in your browser at `http://localhost:8000`.
+
+---
+
+## Default User Accounts
+
+Use the following credentials to log in and test different system roles (Password for all accounts is `password`):
+
+| Role | Email | Capabilities |
+| :--- | :--- | :--- |
+| **Administrator** | `admin@example.com` | Full access, Master Data CRUD, User Directory Management, All Tickets |
+| **IT Support** | `it@example.com` | User Directory Management, Ticket Status Updating, All Tickets |
+| **Regular User** | `user@example.com` | Submit Tickets, View and filter own tickets/stats only |
+
+---
+
+## Development & Maintenance
+
+### Running Tests
+To run the PHPUnit feature and unit test suites:
+```bash
+php artisan test
+```
+
+### Running Seeder Again
+If you want to clear and re-populate the database with dummy tickets:
+```bash
+php artisan db:seed
+```
