@@ -1,6 +1,6 @@
-# OTTO IT - IT Support Ticketing Portal
+#  IT Support Ticketing Portal
 
-OTTO IT is a modern, responsive, and secure IT Support Ticketing Application designed to streamline issue reporting and ticketing operations for organizations.
+ IT Ticket is a modern, responsive, and secure IT Support Ticketing Application designed to streamline issue reporting and ticketing operations for organizations.
 
 ## Tech Stack
 
