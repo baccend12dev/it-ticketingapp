@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submit Support Ticket - OTTO IT Support</title>
+    <title>Submit Support Ticket - IT Support</title>
     <!-- Google Fonts Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -110,7 +110,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h1 class="h3 mb-1 fw-bold"><i class="bi bi-shield-check me-2"></i>OTTO IT Support</h1>
+        <h1 class="h3 mb-1 fw-bold"><i class="bi bi-shield-check me-2"></i> IT Support</h1>
         <p class="mb-0 opacity-75 small">Submit a ticket using your email address (unregistered emails will be auto-registered)</p>
     </div>
     <div class="card-body">

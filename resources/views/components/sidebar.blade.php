@@ -1,6 +1,6 @@
 <div class="sidebar" id="sidebarMenu">
     <div class="brand">
-        <i class="bi bi-shield-check me-2"></i> OTTO IT
+        <i class="bi bi-shield-check me-2"></i> IT Support System
     </div>
     
     <ul class="nav-menu">
