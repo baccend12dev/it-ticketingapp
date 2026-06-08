@@ -47,7 +47,7 @@
     <div class="login-card">
         <div class="text-center mb-4">
             <div class="login-logo">
-                <i class="bi bi-shield-check"></i>OTTO IT
+                <i class="bi bi-shield-check"></i> IT Support System
             </div>
             <p class="text-muted body-sm">Infrastructure Management Core</p>
         </div>

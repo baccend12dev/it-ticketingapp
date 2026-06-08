@@ -32,6 +32,27 @@
 
 4. **Master Data Administration (Admin Only)**:
    - Complete CRUD interfaces for managing **Departments**, **Locations**, **Categories**, and **Sub-Categories**.
+---
+
+## System Screenshots
+
+### 1. Login Page
+![Login Page](ss-img/login-img.png)
+
+### 2. Operational Dashboard
+![Operational Dashboard](ss-img/dashboard-img.png)
+
+### 3. Ticket Directory
+![Ticket Directory](ss-img/listTicket-img.png)
+
+### 4. Create Ticket Page
+![Create Ticket Page](ss-img/createTicket-img.png)
+
+### 5. Guest Ticket Submission Form
+![Guest Ticket Submission](ss-img/aksesByGuest.png)
+
+### 6. Automated Testing Suite Execution
+![Test Suite Execution](ss-img/unitTest-img.png)
 
 ---
 
