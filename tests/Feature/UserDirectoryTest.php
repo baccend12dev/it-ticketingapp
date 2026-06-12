@@ -216,4 +216,117 @@ class UserDirectoryTest extends TestCase
         
         \Illuminate\Support\Facades\Storage::disk('public')->assertExists($ticket->attachment);
     }
+
+    /**
+     * Test authenticated user cannot submit ticket with missing sub category.
+     */
+    public function test_authenticated_user_cannot_submit_ticket_with_missing_sub_category(): void
+    {
+        $category = Category::create(['name' => 'Software', 'is_active' => true]);
+
+        $response = $this->actingAs($this->it)->post('/tickets', [
+            'title' => 'Outlook crash',
+            'department_id' => $this->department->id,
+            'category_id' => $category->id,
+            'sub_category_id' => '', // missing subcategory
+            'priority' => 'high',
+            'call_ext' => 'Ext 333',
+            'description' => 'The software keeps crashing on startup.',
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors('sub_category_id');
+    }
+
+    /**
+     * Test desktop API OPTIONS preflight request.
+     */
+    public function test_desktop_api_preflight_options(): void
+    {
+        $response = $this->json('OPTIONS', '/api/tickets/pending-active');
+        $response->assertStatus(204);
+        $response->assertHeader('Access-Control-Allow-Origin', '*');
+        $response->assertHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    }
+
+    /**
+     * Test desktop API unauthorized calls.
+     */
+    public function test_desktop_api_unauthorized(): void
+    {
+        // Without header or query parameter
+        $response = $this->getJson('/api/tickets/pending-active');
+        $response->assertStatus(401);
+
+        // With invalid token
+        $response = $this->withHeaders(['X-API-Key' => 'wrong-token'])
+            ->getJson('/api/tickets/pending-active');
+        $response->assertStatus(401);
+    }
+
+    /**
+     * Test desktop API retrieves pending and active tickets.
+     */
+    public function test_desktop_api_retrieves_pending_and_active_tickets(): void
+    {
+        $category = Category::create(['name' => 'Software', 'is_active' => true]);
+        $subCategory = SubCategory::create([
+            'name' => 'Outlook',
+            'category_id' => $category->id,
+            'is_active' => true
+        ]);
+
+        // Create pending ticket
+        $ticketPending = Ticket::create([
+            'title' => 'Pending Ticket',
+            'description' => 'Pending description',
+            'priority' => 'low',
+            'status' => 'pending',
+            'user_id' => $this->admin->id,
+            'department_id' => $this->department->id,
+            'category_id' => $category->id,
+            'sub_category_id' => $subCategory->id,
+        ]);
+
+        // Create active ticket
+        $ticketActive = Ticket::create([
+            'title' => 'Active Ticket',
+            'description' => 'Active description',
+            'priority' => 'medium',
+            'status' => 'active',
+            'user_id' => $this->admin->id,
+            'department_id' => $this->department->id,
+            'category_id' => $category->id,
+            'sub_category_id' => $subCategory->id,
+        ]);
+
+        // Create resolved ticket (should not be returned)
+        $ticketResolved = Ticket::create([
+            'title' => 'Resolved Ticket',
+            'description' => 'Resolved description',
+            'priority' => 'high',
+            'status' => 'resolved',
+            'user_id' => $this->admin->id,
+            'department_id' => $this->department->id,
+            'category_id' => $category->id,
+            'sub_category_id' => $subCategory->id,
+        ]);
+
+        // Retrieve tickets using query parameter
+        $response = $this->getJson('/api/tickets/pending-active?api_key=default_it_desktop_key_2026');
+        $response->assertStatus(200);
+        $response->assertHeader('Access-Control-Allow-Origin', '*');
+        $response->assertJsonPath('count', 2);
+        $response->assertJsonFragment(['title' => 'Pending Ticket']);
+        $response->assertJsonFragment(['title' => 'Active Ticket']);
+        $response->assertJsonMissing(['title' => 'Resolved Ticket']);
+
+        // Retrieve tickets using X-API-Key header
+        $response = $this->withHeaders(['X-API-Key' => 'default_it_desktop_key_2026'])
+            ->getJson('/api/tickets/pending-active');
+        $response->assertStatus(200);
+        $response->assertJsonPath('count', 2);
+    }
 }
+
+

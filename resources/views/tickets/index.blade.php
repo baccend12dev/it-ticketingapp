@@ -303,6 +303,16 @@
                 targetBtn.click();
             }
         }
+
+        // Handle auto-opening ticket details modal if ticket_id parameter is present
+        const ticketIdParam = urlParams.get('ticket_id');
+        if (ticketIdParam) {
+            const targetModalEl = document.getElementById(`ticketModal-${ticketIdParam}`);
+            if (targetModalEl) {
+                const modal = new bootstrap.Modal(targetModalEl);
+                modal.show();
+            }
+        }
     });
 </script>
 @endsection

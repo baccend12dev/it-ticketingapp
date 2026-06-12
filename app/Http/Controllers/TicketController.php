@@ -209,4 +209,69 @@ class TicketController extends Controller
 
         return redirect()->route('tickets.public-create')->with('success', "Ticket #TK-{$formattedId} has been submitted successfully! IT Support will contact you shortly.");
     }
+
+    /**
+     * Get pending and active tickets in JSON format with CORS headers.
+     */
+    public function apiPendingActive(Request $request)
+    {
+        // Handle preflight OPTIONS request
+        if ($request->isMethod('options')) {
+            return response('', 204)->withHeaders([
+                'Access-Control-Allow-Origin' => '*',
+                'Access-Control-Allow-Methods' => 'GET, OPTIONS',
+                'Access-Control-Allow-Headers' => 'Content-Type, X-API-Key, Authorization',
+                'Access-Control-Max-Age' => '86400',
+            ]);
+        }
+
+        // Simple Token Check for Security (can be set in .env)
+        $token = $request->header('X-API-Key') ?? $request->query('api_key');
+        $expectedToken = env('DESKTOP_API_KEY', 'default_it_desktop_key_2026');
+
+        if ($token !== $expectedToken) {
+            return response()->json([
+                'error' => 'Unauthorized. Invalid or missing X-API-Key.'
+            ], 401)->withHeaders([
+                'Access-Control-Allow-Origin' => '*',
+            ]);
+        }
+
+        $tickets = Ticket::with(['user', 'department', 'location', 'category', 'subCategory'])
+            ->whereIn('status', ['pending', 'active'])
+            ->orderBy('id', 'desc')
+            ->get()
+            ->map(function ($ticket) {
+                return [
+                    'id' => $ticket->id,
+                    'formatted_id' => '#TK-' . (1000 + $ticket->id),
+                    'title' => $ticket->title,
+                    'description' => $ticket->description,
+                    'priority' => $ticket->priority,
+                    'status' => $ticket->status,
+                    'call_ext' => $ticket->call_ext,
+                    'created_at' => $ticket->created_at->toIso8601String(),
+                    'created_at_humans' => $ticket->created_at->diffForHumans(),
+                    'reporter' => [
+                        'name' => $ticket->user?->name ?? 'System',
+                        'email' => $ticket->user?->email,
+                    ],
+                    'department' => $ticket->department?->name ?? '-',
+                    'location' => $ticket->location?->name ?? '-',
+                    'category' => $ticket->category?->name ?? '-',
+                    'sub_category' => $ticket->subCategory?->name ?? '-',
+                    'web_url' => route('tickets.index') . '?ticket_id=' . $ticket->id,
+                ];
+            });
+
+        return response()->json([
+            'count' => $tickets->count(),
+            'tickets' => $tickets
+        ])->withHeaders([
+            'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Allow-Methods' => 'GET, OPTIONS',
+            'Access-Control-Allow-Headers' => 'Content-Type, X-API-Key, Authorization',
+        ]);
+    }
 }
+

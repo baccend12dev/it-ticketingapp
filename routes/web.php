@@ -20,6 +20,9 @@ Route::middleware('guest')->group(function () {
 Route::get('submit-ticket', [\App\Http\Controllers\TicketController::class, 'showPublicForm'])->name('tickets.public-create');
 Route::post('submit-ticket', [\App\Http\Controllers\TicketController::class, 'storePublicTicket'])->name('tickets.public-store');
 
+// API for Desktop App (Protected by X-API-Key token check in controller)
+Route::match(['get', 'options'], 'api/tickets/pending-active', [\App\Http\Controllers\TicketController::class, 'apiPendingActive'])->name('api.tickets.pending-active');
+
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
